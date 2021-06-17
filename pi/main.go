@@ -4,6 +4,7 @@ import (
 	"VGO/pi/internal/cache"
 	"VGO/pi/internal/cmd"
 	"VGO/pi/internal/config"
+	"VGO/pi/internal/cons"
 	"VGO/pi/internal/core"
 	"VGO/pi/internal/orm"
 	"VGO/pi/internal/pkg/file"
@@ -14,6 +15,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -32,13 +34,18 @@ func main() {
 	var host, port string
 	var logIO = new(file.Log)
 	var (
-		flagPW = flag.Bool("reset", false, "重置控制台密码")
-		flagP  = flag.String("p", "", "API服务端口号")
-		flagD  = flag.Bool("d", false, "是否开启Debug")
-		flagR  = flag.String("r", "custom", "turing：图灵机器人回复 \r custom：自定义回复 ")
-		flagT  = flag.String("t", "", "用于测试的本地文件路径  data/pcm/tonghua_20190804_10_46.pcm")
+		flagVer = flag.Bool("v", false, "查看版本号")
+		flagPW  = flag.Bool("reset", false, "重置控制台密码")
+		flagP   = flag.String("p", "", "API服务端口号")
+		flagD   = flag.Bool("d", false, "是否开启Debug")
+		flagR   = flag.String("r", "custom", "turing：图灵机器人回复 \r custom：自定义回复 ")
+		flagT   = flag.String("t", "", "用于测试的本地文件路径  data/pcm/tonghua_20190804_10_46.pcm")
 	)
 	flag.Parse()
+	fmt.Printf("QiarAI Version: %s \r\n", cons.Version)
+	if *flagVer {
+		return
+	}
 
 	core.FlagReply = flagR
 	core.FlagTest = flagT
@@ -75,7 +82,7 @@ func main() {
 	go func() {
 		logIO.Printf("host: %s", host)
 		if err = srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logIO.Printf("server error: %s\r\n", err)
+			log.Fatalf("server error: %s\r\n", err)
 		}
 	}()
 	quit := make(chan os.Signal)

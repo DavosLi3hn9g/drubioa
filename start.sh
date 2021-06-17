@@ -1,8 +1,14 @@
 #!/bin/bash
-WORKSPACE="/home/pi/VGO"
-cd ${WORKSPACE}
-sudo ./iqiar $*
 
-# sudo cp -f /home/pi/VGO/start.sh /etc/init.d/
-# sudo chmod +x /etc/init.d/start.sh
-# sudo chown root:root /etc/init.d/start.sh
+PROC_NAME=iqiar
+ProcNumber=$(ps -ef | grep -w $PROC_NAME | grep -v grep | wc -l)
+if [ $ProcNumber -le 0 ]; then
+  sudo chmod 777 ./stop.sh
+  sudo chmod +x ./iqiar
+  sudo chmod +x ./reload
+  sudo chmod +rw ./data/*
+  sudo nohup ./iqiar $* > nohup.out 2>&1 &
+  echo "QiarAI is started.."
+else
+  echo "QiarAI is running.."
+fi
