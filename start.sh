@@ -7,7 +7,7 @@ if [ $ProcNumber -le 0 ]; then
   sudo chmod +x ./iqiar
   sudo chmod +x ./reload
   sudo chmod +rw ./data/*
-  sudo nohup ./iqiar $* > nohup.out 2>&1 &
+  sudo nohup ./iqiar $* > ./nohup.log 2>&1 &
   echo "QiarAI is started.."
 else
   echo "QiarAI is running.."
