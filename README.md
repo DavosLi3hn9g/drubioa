@@ -29,7 +29,7 @@
 
 2 . 下载zip包并解压：
 
-`$ wget -O qiar.zip http://iqiar.com/qiar_armv6.zip && unzip -o ./qiar.zip -d ./QiarAI && cd ./QiarAI` 
+`$ wget -O qiar.zip https://iqiar.com/qiar_armv6.zip && unzip -o ./qiar.zip -d ./QiarAI && cd ./QiarAI` 
 
 3 . 赋予执行权限，开始运行：
 
