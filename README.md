@@ -15,7 +15,7 @@
 
 可全程使用您自己可控的云服务和硬件，无需担心隐私泄露。
 
-#### 已实现功能：
+### 已实现功能：
 
 **智能接听：** 识别对方的语音，配合您的话术设置判断是否骚扰行为（比如设置拒接"贷款、中介、炒股等"骚扰来电）
 
@@ -50,7 +50,7 @@
 
 目前确定可用的扩展板，可在淘宝搜索 微雪SIM7600X，其他扩展板还有待测试。
 
-**4 . 一个已经实名的阿里云开发者帐号**
+**3 . 一个已经实名的阿里云开发者帐号**
 
 根据反馈，再看是否要适配其他云服务。
 
@@ -108,6 +108,6 @@
 
 [serial](http://github.com/tarm/serial), [gin](http://github.com/gin-gonic/gin), [go-wav](http://github.com/youpy/go-wav), [websocket](http://github.com/gorilla/websocket), [go-update](http://github.com/inconshreveable/go-update), [vuejs](http://cn.vuejs.org/), [ant-design](http://github.com/vueComponent/ant-design-vue) ...
 
-##项目截图
+## 项目截图
 
 <img src="https://iqiar.com/uploads/pic_1.jpg" width=75% />
