@@ -238,6 +238,7 @@ func Start() {
 				logIO.Fatal("60秒没有收到接听信号，请检查AT读取是否正常！")
 			}
 			*IsTalking = false
+			PhoneCore.NmbFrom = ""
 			CallEnd(10, false)
 		}
 		simState = ""
@@ -246,7 +247,6 @@ func Start() {
 }
 
 func CallEnd(waitSecond int, closeAT bool) {
-	PhoneCore.NmbFrom = ""
 	time.Sleep(time.Duration(waitSecond) * time.Second)
 	if !*IsRunning {
 		logIO.Println("CallEnd！")
