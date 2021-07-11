@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"github.com/tarm/serial"
 	"io"
-	"log"
 	"regexp"
 	"strings"
 	"sync"
@@ -26,14 +25,14 @@ type AT struct {
 func (at *AT) AT(cmd string) {
 	at.mu.Lock()
 	if _, err := at.Port.Write([]byte(cmd + "\r\n")); err != nil {
-		log.Fatal("AT:", err)
+		logIO.Fatal("AT:", err)
 	}
 	at.mu.Unlock()
 }
 func (at *AT) ATByte(cmd []byte) {
 	at.mu.Lock()
 	if _, err := at.Port.Write(cmd); err != nil {
-		log.Fatal("ATByte:", err)
+		logIO.Fatal("ATByte:", err)
 	}
 	at.mu.Unlock()
 }

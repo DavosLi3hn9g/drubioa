@@ -121,11 +121,11 @@ func (p *Phone) LoopPhoneATRead() {
 			p.isEnd = true
 		}
 		if at.Return == "CMS_ERROR" {
-			logIO.Warning("号码可能欠费了！")
+			logIO.Fatal("号码可能欠费了！")
 			p.isEnd = true
 		}
 		if at.Return == "SMS_FULL" {
-			logIO.Warning("短信满了！请删除一些过期短信")
+			logIO.Fatal("短信满了！请删除一些过期短信")
 		}
 		if at.Return == "NOCARRIER" || at.Return == "MISSED" {
 			logIO.Println("终止通话！")
