@@ -152,19 +152,17 @@ func (at *AT) LoopWatchAT(ch chan *CMD) {
 				continue
 			}
 			//新来电
-			if fun.Strpos(data, "RING") > -1 {
+			if fun.Strpos(data, "RING") > -1 || fun.Strpos(data, "+CLIP:") > -1 {
 				ch <- &CMD{"RING", ""}
-				if fun.Strpos(data, "+CLIP:") > -1 {
-					matches := regexp.MustCompile(`CLIP: "(.+?)",(\d+?),`).FindAllStringSubmatch(data, -1)
-					if len(matches) > 0 {
-						if len(matches[0]) > 1 {
-							phoneNum = matches[0][1]
-							logIO.Printf("来电号码: %v", phoneNum)
-							ch <- &CMD{"PHONE_NUM", phoneNum}
-						}
-					} else {
-						logIO.Println("无法识别CLIP")
+				matches := regexp.MustCompile(`CLIP: "(.+?)",(\d+?),`).FindAllStringSubmatch(data, -1)
+				if len(matches) > 0 {
+					if len(matches[0]) > 1 {
+						phoneNum = matches[0][1]
+						logIO.Printf("来电号码: %v", phoneNum)
+						ch <- &CMD{"PHONE_NUM", phoneNum}
 					}
+				} else {
+					logIO.Println("无法识别CLIP")
 				}
 				continue
 			}
@@ -206,6 +204,12 @@ func (at *AT) LoopWatchAT(ch chan *CMD) {
 			}
 			//读取CPCMFRM值，确保CPCMFRM=1
 			if fun.Strpos(data, "CPCMFRM: 1") > -1 {
+				ch <- &CMD{"CPCMFRM", "1"}
+				continue
+			} else if fun.Strpos(data, "CPCMFRM: 0") > -1 {
+				ch <- &CMD{"CPCMFRM", "0"}
+				continue
+			} else if fun.Strpos(data, "CPCMFRM: ") > -1 {
 				ch <- &CMD{"CPCMFRM", ""}
 				continue
 			}

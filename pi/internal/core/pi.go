@@ -63,7 +63,7 @@ func (p *Phone) PhoneAudioWrite(out string) {
 	logIO.Println("AI：", out)
 	b, err := PCM{}.Read(configENV["home_path"] + configENV["cache_path"] + out + ".pcm")
 	if err != nil {
-		logIO.Println("找不到语音缓存文件，正在云端合成。")
+		logIO.Println("找不到语音缓存文件，正在云端合成，请稍等...")
 		isi.InitTTS()
 		b, err = isi.TTS(out, "")
 		if err != nil {
@@ -91,7 +91,14 @@ func (p *Phone) LoopPhoneATRead() {
 			logIO.PrintlnDev("\r\n+++++\r\nReturn：", at.Return, "\r\n+++++\r\n")
 		}
 		if at.Return == "CPCMFRM" {
-			*CPCMFRM = true
+			if at.Value == "1" {
+				*CPCMFRM = true
+			} else if at.Value == "0" {
+				*CPCMFRM = false
+			} else {
+				*CPCMFRM = true
+				logIO.Warning("当前扩展板存在异常，建议重置扩展板！")
+			}
 		}
 		if at.Return == "SMS_NUM" {
 			smsNum := at.Value
@@ -99,6 +106,7 @@ func (p *Phone) LoopPhoneATRead() {
 			logIO.Println("有新短信！！！！")
 		}
 		if at.Return == "RING" {
+			logIO.Println("正在响铃...")
 			*IsRunning = true
 		}
 		if at.Return == "PHONE_NUM" {

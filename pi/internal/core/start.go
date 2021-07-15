@@ -92,7 +92,11 @@ func Start() {
 			if SerialAT.Port == nil {
 				SerialAT.Port, err = serial.OpenPort(&serial.Config{Name: Setting.TTYCall, Baud: 115200})
 				if err != nil {
-					logIO.Fatal(err, "请检查"+Setting.TTYCall+"串口连接是否正常？")
+					if err.Error() == "The requested resource is in use." {
+						logIO.Warning("" + Setting.TTYCall + " 串口正在被占用，请检查后重启本应用。")
+					} else {
+						logIO.Fatal(err, "请检查"+Setting.TTYCall+"串口连接是否正常？")
+					}
 					continue
 				}
 			}
@@ -108,9 +112,10 @@ func Start() {
 				continue
 			}
 			if SerialAudio.Port == nil {
+
 				SerialAudio.Port, err = serial.OpenPort(&serial.Config{Name: Setting.TTYUSB, Baud: 115200, ReadTimeout: time.Second * 20})
 				if err != nil {
-					logIO.Fatal(err, "请检查"+Setting.TTYUSB+"串口连接是否正常？")
+					logIO.Fatal(err, "请检查"+Setting.TTYUSB+" USB串口连接是否正常？")
 					time.Sleep(10 * time.Second)
 					if *IsTalking {
 						SerialAT.AT("AT+CHUP")

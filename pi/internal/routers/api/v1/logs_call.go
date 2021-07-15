@@ -22,7 +22,7 @@ type LogsCall struct {
 func (_ *LogsCall) List(c *gin.Context) {
 	var list []*LogsCall
 	var data []*orm.LogsCall
-	var count int
+	var count int64
 	isWAV := c.Query("is_wav") != ""
 	page := c.Query("page")
 	p, _ := strconv.Atoi(page)

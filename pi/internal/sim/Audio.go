@@ -60,7 +60,7 @@ func (au *Audio) Read(ch chan []byte, file chan string) {
 }
 func (au *Audio) Write(b []byte) {
 	if _, err := au.Port.Write(b); err != nil {
-		logIO.Fatal(err, "发送语音时出现严重错误！")
+		logIO.Fatal(err, "发送语音时出现严重错误！请检查语音读写端口。")
 		return
 	}
 }
