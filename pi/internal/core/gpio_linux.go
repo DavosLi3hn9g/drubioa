@@ -52,7 +52,6 @@ func PowerOn(wait time.Duration) {
 	}
 }
 func LoopPin(BCM uint8, ch chan string) {
-
 	if err := rpio.Open(); err != nil {
 		logIO.Fatal(err)
 	} else {
