@@ -35,7 +35,6 @@ func (_ CallName) Save(data *CallName) *CallName {
 func (c CallName) Delete(k string, v int) error {
 	return db.Where(k, v).Delete(&c).Error
 }
-func (_ CallName) CreatTable() {
-	var u *CallName
-	db.Table(pre + "callname").CreateTable(&u)
+func (c CallName) CreatTable() error {
+	return db.Migrator().CreateTable(&c)
 }

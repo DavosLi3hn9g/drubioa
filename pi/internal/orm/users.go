@@ -1,6 +1,6 @@
 package orm
 
-import "github.com/jinzhu/gorm"
+import "gorm.io/gorm"
 
 type Users struct {
 	Uid      int    `form:"uid" xml:"uid" json:"uid" gorm:"PRIMARY_KEY;AUTO_INCREMENT"` //唯一ID
@@ -43,7 +43,6 @@ func (u *Users) IncHit(num int) {
 func (u Users) Delete(uid int) error {
 	return db.Where("uid = ?", uid).Delete(&u).Error
 }
-func (_ Users) CreatTable() {
-	var u *Users
-	db.Table(pre + "users").CreateTable(&u)
+func (u Users) CreatTable() error {
+	return db.Migrator().CreateTable(&u)
 }

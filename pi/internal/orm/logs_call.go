@@ -29,8 +29,8 @@ func (_ LogsCall) All(wh interface{}, page int) []*LogsCall {
 		return pList
 	}
 }
-func (_ LogsCall) Count(wh interface{}) int {
-	var count int
+func (_ LogsCall) Count(wh interface{}) int64 {
+	var count int64
 	var pList []*LogsCall
 	err = db.Where(wh).Find(&pList).Count(&count).Error
 	if ErrDB(err) {
@@ -67,7 +67,6 @@ func (l LogsCall) Updates(data LogsCall) LogsCall {
 func (l LogsCall) Delete(id int) error {
 	return db.Where("id = ?", id).Delete(&l).Error
 }
-func (_ LogsCall) CreatTable() {
-	var p *LogsCall
-	db.Table(pre + "logs_call").CreateTable(&p)
+func (l LogsCall) CreatTable() error {
+	return db.Migrator().CreateTable(&l)
 }

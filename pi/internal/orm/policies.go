@@ -1,7 +1,7 @@
 package orm
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"strings"
 )
 
@@ -66,7 +66,6 @@ func (p *Policies) IncHit(num int) {
 func (p Policies) Delete(id int) error {
 	return db.Where("id = ?", id).Delete(&p).Error
 }
-func (_ Policies) CreatTable() {
-	var p *Policies
-	db.Table(pre + "policies").CreateTable(&p)
+func (p Policies) CreatTable() error {
+	return db.Migrator().CreateTable(&p)
 }

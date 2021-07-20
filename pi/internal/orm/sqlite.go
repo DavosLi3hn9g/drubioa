@@ -3,15 +3,21 @@ package orm
 import (
 	"VGO/pi/internal/config"
 	"VGO/pi/internal/pkg/logfile"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"database/sql"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
+	"log"
 )
 
 var (
 	db        *gorm.DB
+	sqlDB     *sql.DB
 	err       error
 	pre       = "iq_"
 	configENV = config.ENV
+	logLevel  = logger.Error
 )
 
 type DatelineMap struct {
@@ -24,23 +30,26 @@ type Table struct {
 }
 
 func OpenDB() {
-
-	db, err = gorm.Open("sqlite3", configENV["home_path"]+configENV["db_path"])
+	if configENV["dev_mode"] == "true" {
+		logLevel = logger.Silent
+	}
+	db, err = gorm.Open(sqlite.Open(configENV["home_path"]+configENV["db_path"]), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+			TablePrefix:   pre,
+		},
+		Logger: logger.Default.LogMode(logLevel),
+	})
 	if err != nil {
 		logfile.Fatal(err)
 	}
-	//设置表名前缀
-	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return pre + defaultTableName
+	sqlDB, err = db.DB()
+	if err != nil {
+		log.Fatal(err)
 	}
-	if configENV["dev_mode"] == "true" {
-		db.LogMode(true)
-	} else {
-		db.LogMode(false)
-	}
-	db.SingularTable(true) //约定模型名禁用表名复数
-	db.DB().SetMaxIdleConns(10)
-	db.DB().SetMaxOpenConns(100)
+
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
 	creatTable()
 }
 
@@ -60,7 +69,7 @@ func creatTable() {
 }
 
 func CloseDB() {
-	err = db.Close()
+	err = sqlDB.Close()
 	if err != nil {
 		logfile.Error("数据库连接关闭出错了！")
 	}

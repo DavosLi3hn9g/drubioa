@@ -45,7 +45,6 @@ func (i Intentions) EmptyType(typename string, value string) bool {
 func (i Intentions) Delete(sid int) error {
 	return db.Where("sid = ?", sid).Delete(&i).Error
 }
-func (_ Intentions) CreatTable() {
-	var i *Intentions
-	db.Table(pre + "Intentions").CreateTable(&i)
+func (i Intentions) CreatTable() error {
+	return db.Migrator().CreateTable(&i)
 }

@@ -31,7 +31,6 @@ func (_ Auth) Save(data *Auth) *Auth {
 		return data
 	}
 }
-func (_ Auth) CreatTable() {
-	var u *Auth
-	db.Table(pre + "users").CreateTable(&u)
+func (u Auth) CreatTable() error {
+	return db.Migrator().CreateTable(&u)
 }

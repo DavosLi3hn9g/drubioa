@@ -61,6 +61,6 @@ func (s Settings) Set(key, value string, addHistory bool) *Settings {
 	}
 }
 
-func (s *Settings) CreatTable() {
-	db.Table(pre + "settings").CreateTable(&s)
+func (s Settings) CreatTable() error {
+	return db.Migrator().CreateTable(&s)
 }

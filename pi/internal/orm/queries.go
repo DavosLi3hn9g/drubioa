@@ -63,7 +63,6 @@ func (_ Queries) Save(data *Queries) *Queries {
 func (q Queries) Delete(k string, v int) error {
 	return db.Where(k, v).Delete(&q).Error
 }
-func (_ Queries) CreatTable() {
-	var q *Queries
-	db.Table(pre + "queries").CreateTable(&q)
+func (q Queries) CreatTable() error {
+	return db.Migrator().CreateTable(&q)
 }

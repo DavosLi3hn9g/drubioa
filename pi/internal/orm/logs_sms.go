@@ -23,8 +23,8 @@ func (_ LogsSms) All(wh interface{}, page int) []*LogsSms {
 		return pList
 	}
 }
-func (_ LogsSms) Count(wh interface{}) int {
-	var count int
+func (_ LogsSms) Count(wh interface{}) int64 {
+	var count int64
 	err = db.Where(wh).Count(&count).Error
 	if ErrDB(err) {
 		return 0
@@ -51,7 +51,6 @@ func (_ LogsSms) Save(data *LogsSms) *LogsSms {
 func (l LogsSms) Delete(id string) error {
 	return db.Where("id = ?", id).Delete(&l).Error
 }
-func (_ LogsSms) CreatTable() {
-	var p *LogsSms
-	db.Table(pre + "logs_sms").CreateTable(&p)
+func (l LogsSms) CreatTable() error {
+	return db.Migrator().CreateTable(&l)
 }
