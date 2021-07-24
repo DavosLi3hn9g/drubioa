@@ -11,9 +11,3 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 /deploy/
-/data/cache/
-/data/logs/
-/data/pcm/
-/data/tmp/
-/data/wav/
-/data/sql/
