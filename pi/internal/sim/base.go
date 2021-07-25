@@ -18,10 +18,8 @@ func Check(pName string, port *serial.Port) error {
 	var ret string
 	log.Printf("检查设备 %s【开始】...", pName)
 	if port == nil {
-		if _, ok := now[pName]; !ok {
-			now[pName] = time.Now()
-		}
-		if time.Now().Unix()-now[pName].Unix() > 3 {
+		_, ok := now[pName]
+		if !ok || time.Now().Unix()-now[pName].Unix() > 3 {
 			port, err := serial.OpenPort(&serial.Config{Name: pName, Baud: 115200, ReadTimeout: time.Second * 2})
 			if err != nil {
 				ret = "出错了，无法读取串口设备！" + err.Error()
