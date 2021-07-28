@@ -25,7 +25,11 @@ type AT struct {
 func (at *AT) AT(cmd string) {
 	at.mu.Lock()
 	if _, err := at.Port.Write([]byte(cmd + "\r\n")); err != nil {
-		logIO.Fatal("AT:", err)
+		if strings.HasSuffix(err.Error(), "input/output error") {
+			logIO.Fatal("请确保树莓派已关闭串口调试功能 ==== 错误代码：", err)
+		} else {
+			logIO.Fatal("AT:", err)
+		}
 	}
 	at.mu.Unlock()
 }

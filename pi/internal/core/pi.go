@@ -54,8 +54,8 @@ func (p *Phone) PiInitAT() {
 
 func (p *Phone) PhoneAudioRead(outASR chan *aliyun.Chat, outFile chan string) {
 	var chAudio = make(chan []byte)
-	go SerialAudio.Read(chAudio, outFile) //从串口读取Audio
-	go isi.ReadLoop(chAudio, outASR)      //识别Audio
+	go SerialAudio.Read(chAudio, outFile, Setting.TTYUSB) //从串口读取Audio
+	go isi.ReadLoop(chAudio, outASR)                      //识别Audio
 	<-p.Ctx.Done()
 	return
 }
@@ -160,7 +160,6 @@ func (p *Phone) LoopPhoneATRead() {
 				telFrom, _ := fun.Unicode2String(v[3])
 				timeGo, _ := time.ParseInLocation("06/01/02,15:04:05-07", v[5], timeLoc)
 				SmsList[v[1]] = &orm.LogsSms{
-					Id:       v[1],
 					Text:     text,
 					TelFrom:  telFrom,
 					TelTo:    p.NmbTo,
@@ -178,7 +177,6 @@ func (p *Phone) LoopPhoneATRead() {
 					telFrom, _ := fun.Unicode2String(matches[0][3])
 					timeGo, _ := time.ParseInLocation("06/01/02,15:04:05-07", matches[0][5], timeLoc)
 					SmsList[id] = &orm.LogsSms{
-						Id:       id,
 						Text:     text,
 						TelFrom:  telFrom,
 						TelTo:    p.NmbTo,
