@@ -41,3 +41,12 @@ func (c *Call) EndUpdate(text, content, recording string) {
 		c.CallID = 0
 	}
 }
+func (c *Call) Delete() {
+	if c.CallID > 0 {
+		err := orm.LogsCall{}.Delete(c.CallID)
+		if err != nil {
+			logIO.Error(err)
+		}
+		c.CallID = 0
+	}
+}

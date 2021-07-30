@@ -222,18 +222,22 @@ func Start() {
 							Qiar.Policies = nil
 						}
 					}
-					wavName := audio.Pcm2Wav(pcmFile + ".pcm")
-					if Setting.UploadOSS {
-						oss := new(aliyun.ClientOSS).NewClient(nil)
-						ossName := strings.TrimPrefix(wavName, "./")
-						oss.Upload("call/"+ossName, wavName, Setting.AliyunBucket.Name)
-						logIO.Println("录音已上传：", wavName)
-						pcmURL := oss.GetURL("call/"+ossName, Setting.AliyunBucket.Name)
-						isi.InitRecord()
-						rec = isi.Record(pcmURL, configENV["home_path"]+configENV["wav_path"]+pcmFile+".json")
-						smsText = rec.Text
-						smsJson = rec.Content
-						LogCall.EndUpdate(smsText, smsJson, pcmFile)
+					if pcmFile != "" {
+						wavName := audio.Pcm2Wav(pcmFile + ".pcm")
+						if Setting.UploadOSS {
+							oss := new(aliyun.ClientOSS).NewClient(nil)
+							ossName := strings.TrimPrefix(wavName, "./")
+							oss.Upload("call/"+ossName, wavName, Setting.AliyunBucket.Name)
+							logIO.Println("录音已上传：", wavName)
+							pcmURL := oss.GetURL("call/"+ossName, Setting.AliyunBucket.Name)
+							isi.InitRecord()
+							rec = isi.Record(pcmURL, configENV["home_path"]+configENV["wav_path"]+pcmFile+".json")
+							smsText = rec.Text
+							smsJson = rec.Content
+							LogCall.EndUpdate(smsText, smsJson, pcmFile)
+						} else {
+							LogCall.Delete()
+						}
 					}
 				case <-time.After(time.Second * 60):
 					SerialAT.AT("AT+CHUP")
