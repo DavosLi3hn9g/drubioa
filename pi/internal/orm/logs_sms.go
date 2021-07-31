@@ -40,8 +40,13 @@ func (l LogsSms) Get(id string) *LogsSms {
 		return &l
 	}
 }
-func (_ LogsSms) Save(data *LogsSms) *LogsSms {
-	err = db.Save(&data).Error
+func (_ LogsSms) InsertOrUpdate(data *LogsSms) *LogsSms {
+	db.Where("dateline = ?", data.Dateline).First(&data)
+	if data.Id != "" {
+		err = db.Updates(&data).Error
+	} else {
+		err = db.Create(&data).Error
+	}
 	if ErrDB(err) {
 		return data
 	} else {

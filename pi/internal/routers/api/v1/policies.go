@@ -56,7 +56,7 @@ func (u *Policy) AddOrUpdate(c *gin.Context) {
 		}
 	}
 
-	dbPo = orm.Policies{}.Save(&orm.Policies{Id: id, Title: title, Checked: strings.Join(checkedSlice, "|"), Silent: silent})
+	dbPo = orm.Policies{}.InsertOrUpdate(&orm.Policies{Id: id, Title: title, Checked: strings.Join(checkedSlice, "|"), Silent: silent})
 	jsonResult(c, http.StatusOK, &Policy{
 		dbPo, checked, nil,
 	})

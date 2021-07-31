@@ -61,7 +61,7 @@ func (l *LogsSms) List(c *gin.Context) {
 
 func (l *LogsSms) AddOrUpdate(c *gin.Context) {
 	for _, v := range core.SmsList {
-		orm.LogsSms{}.Save(v)
+		orm.LogsSms{}.InsertOrUpdate(v)
 	}
 }
 

@@ -23,8 +23,8 @@ func (c CallName) Get(wh *CallName) *CallName {
 		return &c
 	}
 }
-func (_ CallName) Save(data *CallName) *CallName {
-	err = db.Save(&data).Error
+func (_ CallName) Add(data *CallName) *CallName {
+	err = db.Create(&data).Error
 	if ErrDB(err) {
 		return data
 	} else {

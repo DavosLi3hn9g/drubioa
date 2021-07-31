@@ -27,7 +27,7 @@ func (u *User) AddOrUpdate(c *gin.Context) {
 	uid := u.Uid
 	tel := u.Tel
 	username := u.UserName
-	dbUser = orm.Users{}.Save(&orm.Users{Uid: uid, Tel: tel, UserName: username})
+	dbUser = orm.Users{}.InsertOrUpdate(&orm.Users{Uid: uid, Tel: tel, UserName: username})
 	jsonResult(c, http.StatusOK, &User{
 		dbUser, nil,
 	})
@@ -62,7 +62,7 @@ func (u *User) AddCall(c *gin.Context) {
 			jsonErr(c, http.StatusBadRequest, cons.JsonErrDefault, "这个称呼已经存在，请勿重复！")
 			return
 		} else {
-			dbCall = orm.CallName{}.Save(&orm.CallName{Uid: uid, Call: call})
+			dbCall = orm.CallName{}.Add(&orm.CallName{Uid: uid, Call: call})
 			//callList = append(callList, dbCall)
 			jsonResult(c, http.StatusOK, dbCall)
 			cache.UsersCache.Update()

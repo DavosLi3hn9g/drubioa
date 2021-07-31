@@ -26,8 +26,13 @@ func (i Intentions) Get(sid int) *Intentions {
 		return &i
 	}
 }
-func (_ Intentions) Save(data *Intentions) *Intentions {
-	err = db.Omit("hits").Save(&data).Error
+func (_ Intentions) InsertOrUpdate(data *Intentions) *Intentions {
+	if data.Sid > 0 {
+		err = db.Omit("hits").Updates(&data).Error
+	} else {
+		err = db.Omit("hits").Create(&data).Error
+		db.Order("sid desc").First(&data)
+	}
 	if ErrDB(err) {
 		return data
 	} else {

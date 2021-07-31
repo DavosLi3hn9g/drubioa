@@ -29,8 +29,13 @@ func (u Users) Get(uid int) *Users {
 		return &u
 	}
 }
-func (_ Users) Save(data *Users) *Users {
-	err = db.Omit("hits").Save(&data).Error
+func (_ Users) InsertOrUpdate(data *Users) *Users {
+	if data.Uid > 0 {
+		err = db.Omit("hits").Updates(&data).Error
+	} else {
+		err = db.Omit("hits").Create(&data).Error
+		db.Order("uid desc").First(&data)
+	}
 	if ErrDB(err) {
 		return data
 	} else {

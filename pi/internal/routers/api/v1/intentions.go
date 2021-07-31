@@ -31,7 +31,7 @@ func (i *Intention) AddOrUpdateSid(c *gin.Context) {
 	title := i.Title
 	end := i.End
 	level := i.Level
-	dbIn = orm.Intentions{}.Save(&orm.Intentions{Sid: sid, Title: title, End: end, Level: level})
+	dbIn = orm.Intentions{}.InsertOrUpdate(&orm.Intentions{Sid: sid, Title: title, End: end, Level: level})
 	go cache.IntentionsCache.Update()
 	jsonResult(c, http.StatusOK, &Intention{
 		dbIn, []*orm.Queries{},
@@ -100,7 +100,7 @@ func (i *Intention) AddOrUpdateQuery(c *gin.Context) {
 		}
 	}
 
-	dbQuery := orm.Queries{}.Save(&orm.Queries{Id: id, Sid: sid, Query: query, Answer: answer, Scores: scores, Mode: mode})
+	dbQuery := orm.Queries{}.InsertOrUpdate(&orm.Queries{Id: id, Sid: sid, Query: query, Answer: answer, Scores: scores, Mode: mode})
 	jsonResult(c, http.StatusOK, dbQuery)
 	go cache.IntentionsCache.Update()
 }

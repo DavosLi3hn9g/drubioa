@@ -28,19 +28,29 @@ func (s *Intentions) New(fromSql bool) *Intentions {
 		for _, pv := range pList {
 			intention[pv.Sid] = append(intention[pv.Sid], pv)
 		}
-		cList := orm.Intentions{}.All(&orm.Intentions{})
-		for _, cv := range cList {
-			if intention[cv.Sid] == nil {
-				intention[cv.Sid] = []*orm.Queries{}
-			}
-			var policy = new(orm.Policies)
-			if cv.End != "" && fun.IsNumeric(cv.End) {
-				policyId, _ := strconv.Atoi(cv.End)
-				policy = policy.Get(policyId)
-			}
 
-			vStr := cv
-			list = append(list, Intention{vStr, intention[cv.Sid], policy})
+		cList := orm.Intentions{}.All(&orm.Intentions{})
+		if len(cList) == 0 {
+			it := &orm.Intentions{
+				Title: "闲聊", End: "", Level: 100, Hello: true,
+			}
+			it = orm.Intentions{}.InsertOrUpdate(it)
+
+			list = append(list, Intention{it, make([]*orm.Queries, 0), new(orm.Policies)})
+		} else {
+			for _, cv := range cList {
+				if intention[cv.Sid] == nil {
+					intention[cv.Sid] = []*orm.Queries{}
+				}
+				var policy = new(orm.Policies)
+				if cv.End != "" && fun.IsNumeric(cv.End) {
+					policyId, _ := strconv.Atoi(cv.End)
+					policy = policy.Get(policyId)
+				}
+
+				vStr := cv
+				list = append(list, Intention{vStr, intention[cv.Sid], policy})
+			}
 		}
 
 		IntentionsCache = &Intentions{List: list}
