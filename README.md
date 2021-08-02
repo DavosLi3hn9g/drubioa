@@ -64,6 +64,9 @@
 
 1 . ssh登录树莓派设备
 
+`sudo raspi-config`
+`然后选择Interfacing Options ->Serial ->no -> yes，关闭串口调试功能。`
+
 2 . 下载zip包并解压：
 
 `$ wget -O qiar.zip https://iqiar.com/qiar_armv6.zip && unzip -o ./qiar.zip -d ./QiarAI && cd ./QiarAI` 
