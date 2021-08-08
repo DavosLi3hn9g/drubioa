@@ -25,7 +25,7 @@ func (_ Queries) All(wh *Queries) []*Queries {
 	}
 }
 func (q Queries) Get(wh *Queries) *Queries {
-	err = db.Where(&wh).First(&q).Error
+	err = db.Where(wh).First(&q).Error
 	if ErrDB(err) {
 		return &q
 	} else {

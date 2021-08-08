@@ -16,7 +16,7 @@ func (_ CallName) All(wh *CallName) []CallName {
 	}
 }
 func (c CallName) Get(wh *CallName) *CallName {
-	err = db.Where(&wh).First(&c).Error
+	err = db.Where(wh).First(&c).Error
 	if ErrDB(err) {
 		return &c
 	} else {

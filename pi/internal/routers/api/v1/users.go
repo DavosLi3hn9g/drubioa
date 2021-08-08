@@ -5,6 +5,7 @@ import (
 	"VGO/pi/internal/cons"
 	"VGO/pi/internal/orm"
 	"VGO/pi/internal/pkg/logfile"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -59,7 +60,7 @@ func (u *User) AddCall(c *gin.Context) {
 	if uid > 0 && call != "" {
 		old := orm.CallName{}.Get(&orm.CallName{Call: call})
 		if old.Id > 0 {
-			jsonErr(c, http.StatusBadRequest, cons.JsonErrDefault, "这个称呼已经存在，请勿重复！")
+			jsonErr(c, http.StatusBadRequest, cons.JsonErrDefault, fmt.Sprintf("这个称呼 %s 已经存在，请勿重复！", old.Call))
 			return
 		} else {
 			dbCall = orm.CallName{}.Add(&orm.CallName{Uid: uid, Call: call})
