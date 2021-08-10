@@ -29,12 +29,12 @@ func (u Users) Get(uid int) *Users {
 		return &u
 	}
 }
-func (_ Users) InsertOrUpdate(data *Users) *Users {
+func (u Users) InsertOrUpdate(data *Users) *Users {
 	if data.Uid > 0 {
-		err = db.Omit("hits").Updates(&data).Error
+		err = db.Omit("hits").Updates(data).Error
 	} else {
-		err = db.Omit("hits").Create(&data).Error
-		db.Order("uid desc").First(&data)
+		err = db.Omit("hits").Create(data).Error
+		db.Order("uid desc").First(&u)
 	}
 	if ErrDB(err) {
 		return data

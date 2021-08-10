@@ -48,7 +48,7 @@ func (l LogsCall) Get(id int) *LogsCall {
 	}
 }
 func (_ LogsCall) Add(data *LogsCall) *LogsCall {
-	err = db.Create(&data).Error
+	err = db.Create(data).Error
 	if ErrDB(err) {
 		return data
 	} else {

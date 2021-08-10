@@ -52,12 +52,12 @@ func (p *Policies) Get(id int) *Policies {
 		return p
 	}
 }
-func (_ Policies) InsertOrUpdate(data *Policies) *Policies {
+func (p Policies) InsertOrUpdate(data *Policies) *Policies {
 	if data.Id > 0 {
-		err = db.Omit("hits").Updates(&data).Error
+		err = db.Omit("hits").Updates(data).Error
 	} else {
-		err = db.Omit("hits").Create(&data).Error
-		db.Order("id desc").First(&data)
+		err = db.Omit("hits").Create(data).Error
+		db.Order("id desc").First(&p)
 	}
 	if ErrDB(err) {
 		return data

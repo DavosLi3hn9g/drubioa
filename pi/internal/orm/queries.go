@@ -52,12 +52,12 @@ func (_ Queries) AllByKeywords(keywords []string) []*Queries {
 		return qList
 	}
 }
-func (_ Queries) InsertOrUpdate(data *Queries) *Queries {
+func (q Queries) InsertOrUpdate(data *Queries) *Queries {
 	if data.Id > 0 {
-		err = db.Updates(&data).Error
+		err = db.Updates(data).Error
 	} else {
-		err = db.Create(&data).Error
-		db.Order("id desc").First(&data)
+		err = db.Create(data).Error
+		db.Order("id desc").First(&q)
 	}
 	if ErrDB(err) {
 		return data

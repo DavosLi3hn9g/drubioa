@@ -24,7 +24,7 @@ func (c CallName) Get(wh *CallName) *CallName {
 	}
 }
 func (_ CallName) Add(data *CallName) *CallName {
-	err = db.Create(&data).Error
+	err = db.Create(data).Error
 	if ErrDB(err) {
 		return data
 	} else {
