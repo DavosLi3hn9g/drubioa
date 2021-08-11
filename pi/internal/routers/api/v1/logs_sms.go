@@ -66,28 +66,26 @@ func (l *LogsSms) AddOrUpdate(c *gin.Context) {
 }
 
 func (l *LogsSms) Del(c *gin.Context) {
-	id := c.PostForm("id")
-	if id != "" {
-		sms := orm.LogsSms{}.Get(id)
-		if sms.Dateline > 0 {
-			smsList := orm.LogsSms{}.All(&orm.LogsSms{Dateline: sms.Dateline, TelFrom: sms.TelFrom}, 0)
-			go func() {
-				for _, v := range smsList {
-					err := orm.LogsSms{}.Delete(v.Id)
-					if err != nil {
-						jsonErr(c, http.StatusBadRequest, cons.JsonErrDefault, "无法删除LogsSms！")
-						return
-					}
-					LogsPi := new(LogsPi)
-					LogsPi.port()
-					if core.SerialAT.Port != nil {
-						core.SerialAT.AT("AT+CMGD=" + v.Id)
-					}
-					delete(core.SmsList, v.Id)
-					time.Sleep(1 * time.Second)
+	//id := c.PostForm("id")
+	dateline, _ := strconv.Atoi(c.PostForm("dateline"))
+	if dateline > 0 {
+		smsList := orm.LogsSms{}.All(&orm.LogsSms{Dateline: dateline}, 0)
+		go func() {
+			for _, v := range smsList {
+				err := orm.LogsSms{}.Delete(v.SmsId)
+				if err != nil {
+					jsonErr(c, http.StatusBadRequest, cons.JsonErrDefault, "无法删除LogsSms！")
+					return
 				}
-			}()
-		}
+				LogsPi := new(LogsPi)
+				LogsPi.port()
+				if core.SerialAT.Port != nil {
+					core.SerialAT.AT("AT+CMGD=" + v.SmsId)
+				}
+				delete(core.SmsList, v.SmsId)
+				time.Sleep(1 * time.Second)
+			}
+		}()
 	}
 	jsonResult(c, http.StatusOK, true)
 }

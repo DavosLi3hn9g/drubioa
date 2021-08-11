@@ -1,11 +1,12 @@
 package orm
 
 type LogsSms struct {
-	Id       string `form:"id" xml:"id" json:"id" gorm:"PRIMARY_KEY;"` //唯一ID
+	Id       int    `form:"id" xml:"id" json:"id" gorm:"PRIMARY_KEY;"` //唯一ID
 	Text     string `form:"text" xml:"text" json:"text"`               //内容text
 	TelFrom  string `form:"tel_from" xml:"tel_from" json:"tel_from"`   //发送方电话号码
 	TelTo    string `form:"tel_to" xml:"tel_to" json:"tel_to"`         //接收方电话号码
 	Dateline int    `form:"dateline" xml:"dateline" json:"dateline"`   //接收时间
+	SmsId    string `form:"sms_id" xml:"sms_id" json:"sms_id"`         //SmsID
 }
 
 func (_ LogsSms) All(wh interface{}, page int) []*LogsSms {
@@ -32,20 +33,20 @@ func (_ LogsSms) Count(wh interface{}) int64 {
 		return count
 	}
 }
-func (l LogsSms) Get(id string) *LogsSms {
-	err = db.First(&l, id).Error
+func (l LogsSms) Get(dateline int) *LogsSms {
+	err = db.Where("dateline = ?", dateline).First(&l).Error
 	if ErrDB(err) {
 		return &l
 	} else {
 		return &l
 	}
 }
-func (_ LogsSms) InsertOrUpdate(data *LogsSms) *LogsSms {
-	db.Where("dateline = ?", data.Dateline).First(&data)
-	if data.Id != "" {
-		err = db.Updates(&data).Error
+func (l LogsSms) InsertOrUpdate(data *LogsSms) *LogsSms {
+	db.Where("dateline = ? AND sms_id = ?", data.Dateline, data.SmsId).First(&l)
+	if data.Id > 0 {
+		err = db.Updates(data).Error
 	} else {
-		err = db.Create(&data).Error
+		err = db.Create(data).Error
 	}
 	if ErrDB(err) {
 		return data
