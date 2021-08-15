@@ -43,7 +43,7 @@ func (l LogsSms) Get(dateline int) *LogsSms {
 }
 func (l LogsSms) InsertOrUpdate(data *LogsSms) *LogsSms {
 	db.Where("dateline = ? AND sms_id = ?", data.Dateline, data.SmsId).First(&l)
-	if data.Id > 0 {
+	if l.Id > 0 {
 		err = db.Updates(data).Error
 	} else {
 		err = db.Create(data).Error
@@ -54,7 +54,7 @@ func (l LogsSms) InsertOrUpdate(data *LogsSms) *LogsSms {
 		return data
 	}
 }
-func (l LogsSms) Delete(id string) error {
+func (l LogsSms) Delete(id int) error {
 	return db.Where("id = ?", id).Delete(&l).Error
 }
 func (l LogsSms) CreatTable() error {

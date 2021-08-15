@@ -164,6 +164,7 @@ func (p *Phone) LoopPhoneATRead() {
 					TelFrom:  telFrom,
 					TelTo:    p.NmbTo,
 					Dateline: int(timeGo.Unix()),
+					SmsId:    v[1],
 				}
 			}
 			*IsRunning = false
@@ -181,6 +182,7 @@ func (p *Phone) LoopPhoneATRead() {
 						TelFrom:  telFrom,
 						TelTo:    p.NmbTo,
 						Dateline: int(timeGo.Unix()),
+						SmsId:    id,
 					}
 					SerialAT.PushSMS(cache.UsersCache.Default().Tel, "来自"+telFrom+"的新短信："+text)
 				}
