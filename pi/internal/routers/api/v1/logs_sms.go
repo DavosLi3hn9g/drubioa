@@ -72,7 +72,7 @@ func (l *LogsSms) Del(c *gin.Context) {
 		smsList := orm.LogsSms{}.All(&orm.LogsSms{Dateline: dateline}, 0)
 		go func() {
 			for _, v := range smsList {
-				err := orm.LogsSms{}.Delete(v.SmsId)
+				err := orm.LogsSms{}.Delete(v.Id)
 				if err != nil {
 					jsonErr(c, http.StatusBadRequest, cons.JsonErrDefault, "无法删除LogsSms！")
 					return
