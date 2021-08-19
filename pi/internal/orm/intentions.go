@@ -31,7 +31,7 @@ func (i Intentions) InsertOrUpdate(data *Intentions) *Intentions {
 		err = db.Omit("hits").Updates(data).Error
 	} else {
 		err = db.Omit("hits").Create(data).Error
-		db.Order("sid desc").First(&i)
+		db.Order("sid desc").First(data)
 	}
 	if ErrDB(err) {
 		return data

@@ -57,7 +57,7 @@ func (q Queries) InsertOrUpdate(data *Queries) *Queries {
 		err = db.Updates(data).Error
 	} else {
 		err = db.Create(data).Error
-		db.Order("id desc").First(&q)
+		db.Order("id desc").First(data)
 	}
 	if ErrDB(err) {
 		return data

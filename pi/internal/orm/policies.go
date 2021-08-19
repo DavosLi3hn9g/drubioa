@@ -57,7 +57,7 @@ func (p Policies) InsertOrUpdate(data *Policies) *Policies {
 		err = db.Omit("hits").Updates(data).Error
 	} else {
 		err = db.Omit("hits").Create(data).Error
-		db.Order("id desc").First(&p)
+		db.Order("id desc").First(data)
 	}
 	if ErrDB(err) {
 		return data
