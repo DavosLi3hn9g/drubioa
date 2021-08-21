@@ -18,18 +18,20 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
 
 type Version struct {
-	Vid      int    `form:"vid" json:"vid" xml:"vid" gorm:"primary_key"`                //
-	Version  string `form:"version" json:"version" xml:"version" binding:"required"`    //版本
-	Content  string `form:"content" json:"content" xml:"content"`                       //正文
-	Download string `form:"download" json:"download" xml:"download" binding:"required"` //下载地址
-	Status   int    `form:"status" json:"status" xml:"status"`                          //状态 -1开发版，0正式版，1公测版
-	Dateline int    `form:"dateline" json:"dateline" xml:"dateline"`                    //发布时间
-	DownNum  int    `form:"down_num" json:"down_num" xml:"down_num"`                    //下载量
+	Vid      int    `form:"vid" json:"vid" xml:"vid" gorm:"primary_key"` //
+	Platform string `form:"platform" json:"platform" xml:"platform"`     //平台
+	Version  string `form:"version" json:"version" xml:"version"`        //版本
+	Content  string `form:"content" json:"content" xml:"content"`        //正文
+	Download string `form:"download" json:"download" xml:"download"`     //下载地址
+	Status   int    `form:"status" json:"status" xml:"status"`           //状态 -1开发版，0正式版，1公测版
+	Dateline int    `form:"dateline" json:"dateline" xml:"dateline"`     //发布时间
+	DownNum  int    `form:"down_num" json:"down_num" xml:"down_num"`     //下载量
 	DateStr  string `form:"date_str" json:"date_str" xml:"date_str"`
 	Hash     string `form:"hash" json:"hash" xml:"hash"`
 }
@@ -40,11 +42,10 @@ var progressRepeat int
 var lastHash string
 
 func (ver Version) versionLast() Version {
-
 	var lastResp struct {
 		Result Version `json:"result"`
 	}
-	last := curl.GET("https://api.iqiar.com/api/v1/ai/version_last", map[string]string{})
+	last := curl.GET(fmt.Sprintf("https://api.iqiar.com/api/v1/ai/version_last?goos=%s&goarch=%s", runtime.GOOS, runtime.GOARCH), map[string]string{})
 	_ = json.Unmarshal(last, &lastResp)
 	return lastResp.Result
 }
