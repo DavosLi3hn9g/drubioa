@@ -45,7 +45,7 @@ func (ver Version) versionLast() Version {
 	var lastResp struct {
 		Result Version `json:"result"`
 	}
-	last := curl.GET(fmt.Sprintf("https://api.iqiar.com/api/v1/ai/version_last?goos=%s&goarch=%s", runtime.GOOS, runtime.GOARCH), map[string]string{})
+	last := curl.GET("https://api.iqiar.com/api/v1/ai/version_last", map[string]string{"goos": runtime.GOOS, "goarch": runtime.GOARCH})
 	_ = json.Unmarshal(last, &lastResp)
 	return lastResp.Result
 }
