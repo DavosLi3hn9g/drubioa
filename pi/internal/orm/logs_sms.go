@@ -44,7 +44,7 @@ func (l LogsSms) Get(dateline int) *LogsSms {
 func (l LogsSms) InsertOrUpdate(data *LogsSms) *LogsSms {
 	db.Where("dateline = ? AND sms_id = ?", data.Dateline, data.SmsId).First(&l)
 	if l.Id > 0 {
-		err = db.Updates(data).Error
+		err = db.Model(&l).Where("id = ?", l.Id).Updates(data).Error
 	} else {
 		err = db.Create(data).Error
 	}

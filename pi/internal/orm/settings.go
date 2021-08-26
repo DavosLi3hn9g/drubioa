@@ -52,7 +52,7 @@ func (s Settings) Set(key, value string, addHistory bool) *Settings {
 			}
 		}
 		set.History = history
-		err = db.Model(&exist).Updates(map[string]interface{}{"value": value, "history": history}).Error
+		err = db.Model(&s).Where("key = ?", exist.Key).Updates(map[string]interface{}{"value": value, "history": history}).Error
 	}
 	if ErrDB(err) {
 		return &set

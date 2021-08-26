@@ -57,7 +57,7 @@ func (_ LogsCall) Add(data *LogsCall) *LogsCall {
 }
 
 func (l LogsCall) Updates(data LogsCall) LogsCall {
-	err = db.Model(&l).Updates(&data).Error
+	err = db.Model(&l).Where("id = ?", data.Id).Updates(&data).Error
 	if ErrDB(err) {
 		return data
 	} else {

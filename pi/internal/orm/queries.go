@@ -54,7 +54,7 @@ func (_ Queries) AllByKeywords(keywords []string) []*Queries {
 }
 func (q Queries) InsertOrUpdate(data *Queries) *Queries {
 	if data.Id > 0 {
-		err = db.Updates(data).Error
+		err = db.Model(&q).Where("id = ?", data.Id).Updates(data).Error
 	} else {
 		err = db.Create(data).Error
 		db.Order("id desc").First(data)

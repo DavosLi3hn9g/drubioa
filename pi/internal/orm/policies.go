@@ -54,7 +54,7 @@ func (p *Policies) Get(id int) *Policies {
 }
 func (p Policies) InsertOrUpdate(data *Policies) *Policies {
 	if data.Id > 0 {
-		err = db.Omit("hits").Updates(data).Error
+		err = db.Model(&p).Where("id = ?", data.Id).Omit("hits").Updates(data).Error
 	} else {
 		err = db.Omit("hits").Create(data).Error
 		db.Order("id desc").First(data)

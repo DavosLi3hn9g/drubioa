@@ -31,7 +31,7 @@ func (u Users) Get(uid int) *Users {
 }
 func (u Users) InsertOrUpdate(data *Users) *Users {
 	if data.Uid > 0 {
-		err = db.Omit("hits").Updates(data).Error
+		err = db.Model(&u).Where("uid = ?", data.Uid).Omit("hits").Updates(data).Error
 	} else {
 		err = db.Omit("hits").Create(data).Error
 		db.Order("uid desc").First(&u)

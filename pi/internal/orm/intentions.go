@@ -28,7 +28,7 @@ func (i Intentions) Get(sid int) *Intentions {
 }
 func (i Intentions) InsertOrUpdate(data *Intentions) *Intentions {
 	if data.Sid > 0 {
-		err = db.Omit("hits").Updates(data).Error
+		err = db.Model(&i).Where("sid = ?", data.Sid).Omit("hits").Updates(data).Error
 	} else {
 		err = db.Omit("hits").Create(data).Error
 		db.Order("sid desc").First(data)
