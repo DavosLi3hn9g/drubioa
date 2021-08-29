@@ -97,7 +97,7 @@ func (p *Phone) LoopPhoneATRead() {
 				*CPCMFRM = false
 			} else {
 				*CPCMFRM = true
-				logIO.Warning("当前扩展板存在异常，建议重置扩展板！")
+				logIO.Warning("当前扩展板存在异常，建议在WEB控制台执行AT+CRESET复位扩展板后重启QiarAI！")
 			}
 		}
 		if at.Return == "SMS_NUM" {
