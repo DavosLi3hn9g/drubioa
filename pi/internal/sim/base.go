@@ -13,7 +13,7 @@ import (
 var logIO *file.Log
 var configENV = config.ENV
 var now = make(map[string]time.Time)
-
+var TimeLoc, _ = time.LoadLocation("Asia/Shanghai") //设置时区
 func Check(pName string, port *serial.Port) error {
 	var ret string
 	log.Printf("检查设备 %s【开始】...", pName)

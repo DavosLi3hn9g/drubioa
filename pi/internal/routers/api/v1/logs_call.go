@@ -4,6 +4,7 @@ import (
 	"VGO/pi/internal/cons"
 	"VGO/pi/internal/core"
 	"VGO/pi/internal/orm"
+	"VGO/pi/internal/sim"
 	"VGO/pkg/fun"
 	"github.com/gin-gonic/gin"
 	"math"
@@ -37,7 +38,7 @@ func (_ *LogsCall) List(c *gin.Context) {
 	for _, v := range data {
 		path := configENV["wav_path"] + v.Recording + ".wav"
 		url := "//" + c.Request.Host + "/" + path
-		list = append(list, &LogsCall{v, time.Unix(int64(v.TimeStart), 0).Format("2006-01-02 15:04:05"), path, url})
+		list = append(list, &LogsCall{v, time.Unix(int64(v.TimeStart), 0).In(sim.TimeLoc).Format("2006-01-02 15:04:05"), path, url})
 	}
 	jsonResult(c, http.StatusOK, map[string]interface{}{
 		"count": count,

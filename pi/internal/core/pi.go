@@ -78,7 +78,6 @@ func (p *Phone) LoopPhoneATRead() {
 		ch         = make(chan *sim.CMD, 10)
 		prevReturn = "*"
 		text       string
-		timeLoc, _ = time.LoadLocation("Asia/Shanghai") //设置时区
 		mu         sync.Mutex
 	)
 	go SerialAT.LoopWatchAT(ch)
@@ -158,7 +157,7 @@ func (p *Phone) LoopPhoneATRead() {
 			for _, v := range matches {
 				text, _ = fun.Unicode2String(v[6])
 				telFrom, _ := fun.Unicode2String(v[3])
-				timeGo, _ := time.ParseInLocation("06/01/02,15:04:05-07", v[5], timeLoc)
+				timeGo, _ := time.ParseInLocation("06/01/02,15:04:05", v[5][0:17], sim.TimeLoc)
 				SmsList[v[1]] = &orm.LogsSms{
 					Text:     text,
 					TelFrom:  telFrom,
@@ -170,13 +169,14 @@ func (p *Phone) LoopPhoneATRead() {
 			*IsRunning = false
 		}
 		if at.Return == "CMGR" {
+			SerialAT.AT("AT+CNMA")
 			matches := regexp.MustCompile(`AT\+CMGR=(\d+?)\r\n\+CMGR: "(.+?)","(\w+?)","(.*?)","(.+?)"\r\n(\w+)\r\n`).FindAllStringSubmatch(at.Value, -1)
 			if len(matches) > 0 {
 				if len(matches[0]) > 6 {
 					id := matches[0][1]
 					text, _ = fun.Unicode2String(matches[0][6])
 					telFrom, _ := fun.Unicode2String(matches[0][3])
-					timeGo, _ := time.ParseInLocation("06/01/02,15:04:05-07", matches[0][5], timeLoc)
+					timeGo, _ := time.ParseInLocation("06/01/02,15:04:05", matches[0][5][0:17], sim.TimeLoc)
 					SmsList[id] = &orm.LogsSms{
 						Text:     text,
 						TelFrom:  telFrom,

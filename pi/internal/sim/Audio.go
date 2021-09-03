@@ -38,7 +38,7 @@ func (au *Audio) Read(ch chan []byte, file chan string, usb string) {
 				logIO.Println("读取失败！请检查USB端口配置")
 			} else {
 				logIO.Print(usb + " 正在写入PCM...")
-				t := time.Now().Format("20060102_15_04_05")
+				t := time.Now().In(TimeLoc).Format("20060102_15_04_05")
 				filename := "call_" + t
 				if configENV["pcm_path"] != "" {
 					pcmPath = configENV["home_path"] + configENV["pcm_path"]

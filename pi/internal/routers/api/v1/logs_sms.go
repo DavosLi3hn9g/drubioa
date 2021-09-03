@@ -4,7 +4,9 @@ import (
 	"VGO/pi/internal/cons"
 	"VGO/pi/internal/core"
 	"VGO/pi/internal/orm"
+	"VGO/pi/internal/sim"
 	"github.com/gin-gonic/gin"
+	"math"
 	"net/http"
 	"sort"
 	"strconv"
@@ -41,7 +43,7 @@ func (l *LogsSms) List(c *gin.Context) {
 	for _, k := range sortedKeys {
 		v := sms[k]
 		v.Text = text[k]
-		list = append(list, &LogsSms{v, time.Unix(int64(v.Dateline), 0).Format("2006-01-02 15:04:05")})
+		list = append(list, &LogsSms{v, time.Unix(int64(v.Dateline), 0).In(sim.TimeLoc).Format("2006-01-02 15:04:05")})
 	}
 	count := len(list)
 	start := limit * p
@@ -68,7 +70,7 @@ func (l *LogsSms) AddOrUpdate(c *gin.Context) {
 func (l *LogsSms) Del(c *gin.Context) {
 	//id := c.PostForm("id")
 	dateline, _ := strconv.Atoi(c.PostForm("dateline"))
-	if dateline > 0 {
+	if math.Abs(float64(dateline)) > 0 {
 		smsList := orm.LogsSms{}.All(&orm.LogsSms{Dateline: dateline}, 0)
 		go func() {
 			for _, v := range smsList {
